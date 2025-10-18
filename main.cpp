@@ -57,10 +57,11 @@ int main(int argc, char *argv[]) {
     std::vector<std::pair<std::string, int >> wordCounts;
     bst.inorderCollect(wordCounts);
 
-    int totalTokens = words.size();
-    int uniqueWords = wordCounts.size();
+    int totalTokens = static_cast<int> (words.size());
+    int uniqueWords = static_cast<int>(wordCounts.size());
     unsigned height = bst.height();
-    int minfreq, maxfreq = 0;
+    int minfreq = 0;
+    int maxfreq = 0;
 
     if (uniqueWords > 0) {
         minfreq = wordCounts.at(0).second;
@@ -87,16 +88,17 @@ int main(int argc, char *argv[]) {
     }
     PriorityQueue priority_queue(nodes);
 
-    std::ofstream freqFile(wordFreqFileName);
-    if (!freqFile)
+    std::ofstream out(wordFreqFileName);
+    if (!out.is_open())
         std::cout << "Error writing to " << wordFreqFileName << "\n";
 
-    for (int i = 0; i < priority_queue.size(); i++) {
-        TreeNode* node = nodes.at(i);
-        freqFile << node->value() << " " << node->getCount() << "\n";
+    const std::vector<TreeNode*>& sortedItems = priority_queue.items();
+    for (int i = 0; i < sortedItems.size(); i++) {
+        TreeNode* node = sortedItems.at(i);
+        out << node->value() << " " << node->getCount() << "\n";
     }
 
-    freqFile.close();
+    out.close();
 
 
 
